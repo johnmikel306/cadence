@@ -1,71 +1,74 @@
 # 12reader
 
-12reader is a Flask-based document read-aloud app that lets you upload a file, render it in the browser, click any visible passage, and start listening from that point with streamed speech and synchronized highlighting.
+12reader is now a monorepo for two related reading products:
 
-It is built as a simple MVP for a multi-format reader that feels closer to browser read-aloud than a plain text-to-speech demo.
+- a Flask web app for uploaded documents
+- a Chrome extension for live webpage read-aloud
 
-## What it does
+Both products focus on the same core experience: start reading quickly, follow along visually, and let the user jump to a specific place in the content.
 
-- Uploads and reads `pdf`, `docx`, `md`, and `txt` files
-- Renders each file in a format-appropriate viewer instead of flattening everything into one raw text block
-- Lets you click a word, sentence, or paragraph area to begin reading from that point
-- Streams speech from `edge-tts` so playback starts quickly
-- Highlights the current word and current sentence while audio plays
-- Supports play, pause, resume, stop, voice selection, speed changes, and hot-swapping voice/speed during playback
-- Includes keyboard shortcuts and a landing page plus a dedicated reader view
+## Apps in this repo
 
-## Supported formats
+### `apps/web`
 
-- `PDF` - rendered with `pdf.js` and read from the PDF text layer
-- `DOCX` - rendered with `docx-preview` with best-effort formatting preservation
-- `Markdown` - rendered to clean HTML so markdown symbols are not spoken
-- `TXT` - displayed as readable paragraphs and lines
+The document reader web app.
 
-## Current UX
+- uploads and reads `pdf`, `docx`, `md`, and `txt`
+- renders documents in a format-appropriate viewer
+- streams audio with `edge-tts`
+- highlights the current word and sentence
+- lets the user click a visible passage to start reading there
+- supports voice and speed hot-swaps during playback
 
-- Home page at `/`
-- Reader at `/reader`
-- Upload a file, wait for rendering, then click anywhere in the document to start reading
-- Changing voice or speed during playback restarts the stream from the current reading position
-- Speed changes also apply immediately on the client so the response feels instant
+### `apps/extension`
 
-## Keyboard shortcuts
+The Chrome extension for webpage reading.
 
-- `Space` - pause/resume
-- `Esc` - stop
-- `[` - previous sentence
-- `]` - next sentence
+- reads regular webpages with `chrome.tts`
+- supports click-to-read when click mode is enabled
+- highlights the active sentence and word directly on the page
+- includes popup controls for voice, speed, pause, resume, and stop
 
-## Tech stack
-
-- Backend: `Flask`
-- Streaming TTS: `edge-tts`
-- Frontend rendering:
-  - `pdf.js` for PDF
-  - `docx-preview` for DOCX
-  - `marked` + `DOMPurify` for Markdown
-- Sync model: streamed MP3 audio plus Server-Sent Events for word timing
-
-## Project structure
+## Monorepo layout
 
 ```text
 12reader/
 |- app.py
 |- requirements.txt
-|- templates/
-|  |- landing.html
-|  |- index.html
-|- static/
-|  |- css/
-|  |  |- app.css
-|  |  |- landing.css
-|  |- js/
-|     |- app.js
-|     |- landing.js
-|- uploads/
+|- package.json
+|- apps/
+|  |- web/
+|  |  |- app.py
+|  |  |- requirements.txt
+|  |  |- templates/
+|  |  |- static/
+|  |  |- uploads/
+|  |- extension/
+|     |- manifest.json
+|     |- background.js
+|     |- content.js
+|     |- popup.html
+|     |- popup.css
+|     |- popup.js
+|- packages/
+|  |- reader-core/
 ```
 
-## Getting started
+## What is shared conceptually
+
+The two apps are separate runtimes, but they are built around the same reader ideas:
+
+- canonical reading offsets
+- click-to-read behavior
+- sentence segmentation
+- word and sentence highlighting
+- voice and speed control
+
+`packages/reader-core` is the shared home for consolidating that logic over time.
+
+## Running the web app
+
+You can still start the web app from the repo root.
 
 ### 1. Create and activate a virtual environment
 
@@ -83,13 +86,13 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-### 2. Install dependencies
+### 2. Install Python dependencies
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-### 3. Start the app
+### 3. Start the server
 
 ```bash
 python app.py
@@ -98,18 +101,30 @@ python app.py
 Open:
 
 - `http://127.0.0.1:5000/` for the landing page
-- `http://127.0.0.1:5000/reader` for the reader directly
+- `http://127.0.0.1:5000/reader` for the document reader
 
-## How it works
+## Loading the Chrome extension
 
-1. The backend stores the uploaded original document locally in `uploads/`
-2. The browser renders the original file in a viewer that matches its format
-3. The frontend builds a canonical reading index from the rendered document
-4. When you click a location, the frontend sends the reading offset to the backend
-5. The backend starts an `edge-tts` session from that point and streams audio
-6. Word timing events are sent alongside the stream so the frontend can highlight the active word and sentence
+1. Open `chrome://extensions`
+2. Turn on Developer mode
+3. Click `Load unpacked`
+4. Select `apps/extension`
 
-## API overview
+Then open any normal webpage and use the popup to:
+
+- read from the top
+- enable click-to-read
+- pause, resume, or stop
+- change voice and speed
+
+## Root scripts
+
+```bash
+npm run check:extension
+npm run check:web
+```
+
+## Web app API overview
 
 - `GET /` - landing page
 - `GET /reader` - reader UI
@@ -122,25 +137,24 @@ Open:
 - `GET /api/read-sessions/<session_id>/events` - stream word timing events via SSE
 - `DELETE /api/read-sessions/<session_id>` - stop a session
 
-## Limitations
+## Current limitations
 
-- Scanned or image-only PDFs do not have reliable text-layer click-to-read without OCR
-- Very complex PDFs and DOCX files can still produce minor timing or text alignment drift
-- Uploaded files and sessions are stored locally/in memory and expire automatically; there is no database persistence
-- The app currently depends on an internet connection for `edge-tts` and CDN-hosted frontend libraries
-- There is no authentication, multi-user persistence, or production hardening yet
+### Web app
 
-## Development notes
+- scanned or image-only PDFs still need OCR for reliable click-to-read
+- very complex PDFs and DOCX files can still drift slightly in text timing alignment
+- uploaded files and sessions are local/in-memory only
 
-- The backend is intentionally simple and keeps session state in memory
-- The frontend does most of the heavy lifting for rendering, click mapping, and highlight sync
-- Voice and speed changes during playback are handled by hot-swapping to a new stream from the current reading position
+### Chrome extension
 
-## Quick test flow
+- works best on standard article/content pages
+- very dynamic apps, editors, or virtualized pages may need more extraction rules
+- `chrome://` pages and some protected pages do not allow content script behavior
+- webpage voice quality depends on the Chrome/OS voice stack available on the machine
 
-1. Start the server
-2. Open `/reader`
-3. Upload one of each: `pdf`, `docx`, `md`, `txt`
-4. Click inside the rendered document to start reading
-5. Change speed and voice while playback is active
-6. Verify the highlight follows the spoken content
+## Recommended next steps
+
+1. extract shared reader utilities into `packages/reader-core`
+2. add tests around sentence segmentation and offset mapping
+3. add better webpage content filtering for article-heavy pages
+4. add an optional cloud-voice mode for the extension later if you want backend voice parity

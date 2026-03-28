@@ -1,0 +1,14 @@
+{
+  "name": "12reader",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/extension",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "python app.py",
+    "check:web": "python -m py_compile app.py apps/web/app.py",
+    "check:extension": "node --check apps/extension/background.js && node --check apps/extension/content.js && node --check apps/extension/popup.js"
+  }
+}

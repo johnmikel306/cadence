@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12reader</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <main class="popup-shell">
+        <header class="popup-header">
+            <p class="eyebrow">12reader extension</p>
+            <h1>Read this webpage aloud</h1>
+            <p class="subcopy">Use chrome.tts voices with click-to-read and live highlighting.</p>
+        </header>
+
+        <section class="panel">
+            <label class="field">
+                <span>Voice</span>
+                <select id="voice-select"></select>
+            </label>
+
+            <label class="field">
+                <span>Speed</span>
+                <select id="rate-select">
+                    <option value="0.75">0.75x</option>
+                    <option value="1" selected>1.0x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                </select>
+            </label>
+
+            <label class="toggle-row">
+                <input id="click-mode-toggle" type="checkbox">
+                <span>Enable click-to-read on this page</span>
+            </label>
+
+            <div class="button-grid">
+                <button id="read-top-btn" type="button" class="primary">Read from top</button>
+                <button id="pause-btn" type="button">Pause</button>
+                <button id="resume-btn" type="button">Resume</button>
+                <button id="stop-btn" type="button">Stop</button>
+            </div>
+        </section>
+
+        <section class="status-panel">
+            <p id="status-text" class="status-text">Open a webpage and start reading.</p>
+            <p id="page-meta" class="page-meta"></p>
+        </section>
+    </main>
+
+    <script src="popup.js"></script>
+</body>
+</html>

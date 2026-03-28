@@ -94,36 +94,6 @@
     transform: translateX(-4px);
 }
 
-/* Hero Section */
-.hero {
-    padding: 24px 28px 10px;
-    animation: slideUp 0.6s ease-out 0.1s both;
-}
-
-.eyebrow {
-    margin: 0 0 10px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-}
-
-.hero h1 {
-    margin: 0;
-    max-width: 12ch;
-    font-size: clamp(2.4rem, 5vw, 4.8rem);
-    line-height: 0.94;
-}
-
-.hero-copy {
-    margin: 18px 0 0;
-    max-width: 70ch;
-    font-size: 1.03rem;
-    line-height: 1.65;
-    color: var(--muted);
-}
-
 /* Control Panel */
 .control-panel,
 .reader-notes,
@@ -691,7 +661,6 @@ pre {
         padding-top: 14px;
     }
 
-    .hero,
     .control-panel {
         padding-left: 16px;
         padding-right: 16px;
