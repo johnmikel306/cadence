@@ -39,7 +39,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 chrome.commands.onCommand.addListener((command) => {
     void handleCommand(command).catch((error) => {
-        console.error("12reader command failed:", error);
+        console.error("Cadence command failed:", error);
     });
 });
 

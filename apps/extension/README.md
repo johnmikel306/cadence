@@ -1,6 +1,6 @@
-# 12reader Chrome extension
+# Cadence Chrome extension
 
-This extension reads webpages aloud by calling the local 12reader Flask app, which streams `edge-tts` audio and timing data.
+This extension reads webpages aloud by calling the local Cadence Flask app, which streams `edge-tts` audio and timing data.
 
 ## What it does
 
@@ -29,5 +29,5 @@ The extension expects the backend at `http://127.0.0.1:5000`.
 
 ## Notes
 
-- this is the webpage-reading side of the 12reader monorepo
+- this is the webpage-reading side of the Cadence monorepo
 - it uses the Flask `edge-tts` backend, not `chrome.tts`

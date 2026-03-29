@@ -1,4 +1,4 @@
-# 12reader Learning Notebooks
+# Cadence Learning Notebooks
 
 This folder is a beginner-friendly course for understanding how this repo is designed and how you could build it yourself.
 

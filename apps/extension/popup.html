@@ -3,50 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>12reader</title>
+    <title>Cadence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
     <main class="popup-shell">
-        <header class="popup-header">
-            <p class="eyebrow">12reader extension</p>
-            <h1>Read this webpage aloud</h1>
-            <p class="subcopy">Uses natural sounding voices.</p>
+        <header class="popup-topbar">
+            <div class="popup-brand">Cadence</div>
+            <div class="popup-brand-mark">Extension</div>
         </header>
 
-        <section class="panel">
-            <label class="field">
-                <span>Voice</span>
-                <select id="voice-select"></select>
-            </label>
+        <section class="artifact-stage">
+            <div class="artifact-cover">
+                <img id="artifact-cover-image" alt="Current page icon" hidden>
+                <div id="artifact-cover-fallback" class="artifact-cover-fallback">C</div>
+            </div>
+            <p id="artifact-kicker" class="artifact-kicker">Current page</p>
+            <h1 id="artifact-title" class="artifact-title">Open a webpage to begin.</h1>
+            <p id="artifact-meta" class="artifact-meta">Local Edge TTS playback</p>
+        </section>
 
-            <label class="field">
-                <span>Speed</span>
-                <select id="rate-select">
-                    <option value="-25%">0.75x</option>
-                    <option value="+0%" selected>1.0x</option>
-                    <option value="+25%">1.25x</option>
-                    <option value="+50%">1.5x</option>
-                </select>
-            </label>
+        <button id="primary-action-btn" type="button" class="primary-playback">Initiate playback</button>
 
-            <label class="toggle-row">
+        <div class="secondary-actions">
+            <button id="pause-btn" type="button" class="secondary-button">Pause</button>
+            <button id="stop-btn" type="button" class="secondary-button secondary-button-dark">Terminate</button>
+        </div>
+
+        <section class="toggle-panel">
+            <div>
+                <p class="panel-label">Page interaction</p>
+                <p class="toggle-title">Click to read</p>
+                <p class="toggle-copy">Start playback from the sentence or paragraph you choose.</p>
+            </div>
+            <label class="switch">
                 <input id="click-mode-toggle" type="checkbox">
-                <span>Enable click-to-read on this page</span>
+                <span class="switch-ui"></span>
             </label>
+        </section>
 
-            <div class="button-grid">
-                <button id="read-top-btn" type="button" class="primary">Read from top</button>
-                <button id="pause-btn" type="button">Pause</button>
-                <button id="resume-btn" type="button">Resume</button>
-                <button id="stop-btn" type="button">Stop</button>
+        <section class="control-panel">
+            <div class="panel-head">
+                <span class="panel-label">Narrator profile</span>
+                <span class="panel-note">Edge TTS</span>
+            </div>
+            <div class="voice-shell">
+                <select id="voice-select"></select>
+            </div>
+        </section>
+
+        <section class="control-panel speed-panel">
+            <div class="panel-head">
+                <span class="panel-label">Temporal speed</span>
+                <span id="rate-readout" class="panel-note">1.0x</span>
+            </div>
+            <input id="rate-range" class="rate-range" type="range" min="0" max="3" step="1" value="1">
+            <div class="rate-labels">
+                <span>0.75x</span>
+                <span>1.0x</span>
+                <span>1.25x</span>
+                <span>1.5x</span>
             </div>
         </section>
 
         <section class="status-panel">
             <p id="status-text" class="status-text">Open a webpage and start reading.</p>
-            <p id="page-meta" class="page-meta"></p>
         </section>
+
+        <div class="command-hints">
+            <span>Ctrl/Cmd + Shift + U · Start</span>
+            <span>Ctrl/Cmd + Shift + P · Pause / Resume</span>
+        </div>
     </main>
 
     <script src="popup.js"></script>

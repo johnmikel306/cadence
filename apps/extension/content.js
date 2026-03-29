@@ -76,7 +76,7 @@
             case "SET_CLICK_MODE":
                 state.clickMode = Boolean(message.enabled);
                 updateClickModeMarker();
-                showToast(state.clickMode ? "12reader click-to-read enabled" : "12reader click-to-read disabled");
+                showToast(state.clickMode ? "Cadence click-to-read enabled" : "Cadence click-to-read disabled");
                 return { ok: true };
 
             case "READER_STATE_UPDATED":
@@ -98,7 +98,7 @@
 
             case "READING_DONE":
                 scheduleHighlightRedraw();
-                showToast("12reader finished this page");
+                showToast("Cadence finished this page");
                 return { ok: true };
 
             case "CLEAR_READER":
@@ -162,7 +162,7 @@
                 throw new Error(response?.error || "Could not start webpage reading.");
             }
         } catch (error) {
-            showToast(error.message || "12reader could not start reading here.");
+            showToast(error.message || "Cadence could not start reading here.");
         }
     }
 
@@ -822,7 +822,7 @@
         controller.dataset.visible = "false";
         controller.innerHTML = `
             <div class="twelve-reader-controller__meta">
-                <span class="twelve-reader-controller__badge">12reader</span>
+                <span class="twelve-reader-controller__badge">Cadence</span>
                 <span id="${CONTROLLER_STATUS_ID}" class="twelve-reader-controller__status">Reading aloud</span>
             </div>
             <div class="twelve-reader-controller__actions">

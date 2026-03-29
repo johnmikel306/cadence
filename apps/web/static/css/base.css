@@ -1,25 +1,24 @@
-/* 12 Reader — Shared Design Tokens & Reset */
+/* Cadence — Shared Design Tokens & Reset */
 
 :root {
-  /* Color Palette */
-  --bg: #f4efe6;
-  --panel: rgba(255, 251, 245, 0.94);
-  --panel-strong: #fffdf8;
-  --text: #1f1b16;
-  --muted: #6f6558;
-  --line: rgba(57, 43, 31, 0.14);
-  --accent: #0b6b6f;
-  --accent-strong: #074b4d;
-  --accent-soft: rgba(11, 107, 111, 0.12);
-  --sentence-hl: rgba(249, 203, 61, 0.28);
-  --word-hl: rgba(234, 94, 42, 0.4);
-  --shadow: 0 24px 60px rgba(34, 24, 15, 0.12);
-  --shadow-sm: 0 4px 12px rgba(34, 24, 15, 0.08);
+  --bg: #f5f3ef;
+  --panel: rgba(255, 255, 255, 0.86);
+  --panel-strong: #ffffff;
+  --text: #151515;
+  --muted: #5f5d59;
+  --line: rgba(17, 17, 17, 0.12);
+  --accent: #111111;
+  --accent-strong: #2a2928;
+  --accent-soft: rgba(17, 17, 17, 0.08);
+  --sentence-hl: #eceae5;
+  --word-hl: #141414;
+  --shadow: 0 24px 60px rgba(20, 18, 16, 0.1);
+  --shadow-sm: 0 4px 12px rgba(20, 18, 16, 0.06);
 
   /* Typography */
-  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-copy: "Source Serif 4", Georgia, serif;
+  --font-display: "Newsreader", Georgia, serif;
+  --font-ui: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-copy: "Newsreader", Georgia, serif;
   --font-mono: "Fira Code", "Monaco", "Courier Prime", ui-monospace, monospace;
 }
 
@@ -43,9 +42,8 @@ body {
   font-family: var(--font-ui);
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(11, 107, 111, 0.18), transparent 32%),
-    radial-gradient(circle at top right, rgba(208, 149, 84, 0.18), transparent 28%),
-    linear-gradient(180deg, #faf6ef 0%, #f4efe6 100%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.78)),
+    linear-gradient(180deg, #f8f6f2 0%, #efede8 100%);
   overflow-x: hidden;
 }
 

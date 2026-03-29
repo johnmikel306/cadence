@@ -8,15 +8,18 @@ It is based on product references and web design inspiration from sources like:
 - `linear.app`
 - `webflow.com/blog/web-design-trends-2025`
 
-## 1. What the current name does well
+## 1. Current decision
 
-`12reader` is short and memorable enough inside a dev repo.
+The product is now named `Cadence`.
 
-But as a product name, it has some problems:
+That choice fits the product well because it suggests:
 
-- it does not explain what the product does
-- the number does not carry obvious meaning for a new user
-- it feels more like an internal codename than a polished reading product
+- rhythm
+- pacing
+- reading flow
+- listening with structure
+
+It is more premium and more memorable than the earlier internal-style name.
 
 ## 2. Better name directions
 
@@ -60,9 +63,9 @@ These feel more software-like and functional.
 
 These feel more approachable but slightly less premium.
 
-## 3. My strongest recommendation
+## 3. Final name shortlist
 
-If you want a name that is simple, useful, and believable right now, my top 5 are:
+Before the decision, these were the strongest options:
 
 1. `ReadAlong`
 2. `Cadence`
@@ -88,6 +91,8 @@ Why:
 
 - connects naturally to rhythm, voice, and reading pace
 - feels more unique and product-brand-like
+
+This is now the chosen direction for the repo UI.
 
 ## 4. Typography recommendations
 

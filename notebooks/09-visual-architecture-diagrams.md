@@ -7,7 +7,7 @@ These are not exact UML diagrams. They are beginner diagrams designed to help yo
 ## 1. Whole monorepo view
 
 ```text
-12reader monorepo
+Cadence monorepo
 |
 |- apps/web
 |  |- Flask backend

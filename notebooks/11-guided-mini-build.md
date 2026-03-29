@@ -2,7 +2,7 @@
 
 This notebook gives you a practical learning path for building a smaller version yourself.
 
-Do not try to rebuild all of 12reader immediately.
+Do not try to rebuild all of Cadence immediately.
 
 Build a mini-reader first.
 

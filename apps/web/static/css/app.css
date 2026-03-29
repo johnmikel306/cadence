@@ -1,11 +1,11 @@
 @import url("base.css");
 
-/* 12 Reader – Application Layout & Components */
+/* Cadence – Reader Layout & Components */
 
 .app-shell {
     width: min(1400px, calc(100vw - 32px));
     margin: 0 auto;
-    padding: 28px 0 40px;
+    padding: 24px 0 40px;
     animation: fadeIn 0.6s ease-out;
 }
 
@@ -73,25 +73,40 @@
 
 /* Navigation */
 .reader-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
     margin-bottom: 20px;
     animation: slideDown 0.5s ease-out;
+}
+
+.reader-brand {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.06em;
 }
 
 .nav-home {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 16px;
+    padding: 10px 0;
     color: var(--accent);
     text-decoration: none;
-    font-weight: 600;
-    border-radius: 10px;
-    transition: all 0.3s ease;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--accent);
+    transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .nav-home:hover {
-    background: var(--accent-soft);
-    transform: translateX(-4px);
+    background: transparent;
+    color: var(--accent-strong);
+    border-bottom-color: var(--accent-strong);
 }
 
 /* Control Panel */
@@ -100,9 +115,10 @@
 .viewer-panel {
     background: var(--panel);
     border: 1px solid var(--line);
-    border-radius: 24px;
+    border-radius: 0;
     box-shadow: var(--shadow);
     transition: all 0.3s ease;
+    backdrop-filter: blur(14px);
 }
 
 .control-panel {
@@ -113,7 +129,7 @@
 
 .control-panel:hover {
     border-color: var(--accent);
-    box-shadow: 0 24px 60px rgba(11, 107, 111, 0.15);
+    box-shadow: 0 24px 60px rgba(17, 17, 17, 0.08);
 }
 
 .control-row {
@@ -138,10 +154,13 @@
     justify-content: center;
     min-width: 180px;
     padding: 14px 18px;
-    border-radius: 16px;
+    border-radius: 0;
     background: var(--accent);
     color: #fff;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.74rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
@@ -166,7 +185,7 @@
 
 .file-picker:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 24px rgba(11, 107, 111, 0.3);
+    box-shadow: 0 12px 24px rgba(17, 17, 17, 0.12);
 }
 
 .file-picker:active {
@@ -215,8 +234,8 @@ select,
 .button-row button {
     min-height: 46px;
     padding: 0 14px;
-    border-radius: 14px;
-    border: 2px solid var(--line);
+    border-radius: 0;
+    border: 1px solid var(--line);
     background: var(--panel-strong);
     color: var(--text);
     transition: all 0.3s ease;
@@ -242,7 +261,10 @@ select:focus {
 
 .button-row button {
     padding: 0 18px;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
@@ -267,7 +289,7 @@ select:focus {
 
 .button-row button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(31, 27, 22, 0.15);
+    box-shadow: 0 8px 16px rgba(17, 17, 17, 0.08);
 }
 
 .button-row button:active {
@@ -296,9 +318,10 @@ select:focus {
     padding: 16px 22px;
     background: var(--panel);
     border: 1px solid var(--line);
-    border-radius: 24px;
+    border-radius: 0;
     box-shadow: var(--shadow);
     animation: slideUp 0.6s ease-out 0.25s both;
+    backdrop-filter: blur(14px);
 }
 
 .progress-track {
@@ -332,7 +355,7 @@ select:focus {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     color: var(--muted);
     margin-top: 12px;
     padding-top: 12px;
@@ -346,7 +369,7 @@ kbd {
     padding: 4px 8px;
     background: var(--panel-strong);
     border: 1px solid var(--line);
-    border-radius: 4px;
+    border-radius: 0;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     font-weight: 500;
@@ -461,13 +484,17 @@ kbd {
 
 .reader-notes h2 {
     margin: 0 0 14px;
-    font-size: 1rem;
+    font-size: 2rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.04em;
 }
 
 .reader-notes ul {
     margin: 0;
     padding-left: 18px;
     line-height: 1.7;
+    font-size: 0.95rem;
 }
 
 /* Viewer Panel */
@@ -484,15 +511,15 @@ kbd {
 .viewer-scroll-area {
     height: calc(72vh - 28px);
     overflow: auto;
-    border-radius: 18px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(248, 243, 234, 0.9));
-    border: 1px solid rgba(57, 43, 31, 0.08);
+    border-radius: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(244, 242, 238, 0.92));
+    border: 1px solid rgba(17, 17, 17, 0.08);
 }
 
 .document-viewer {
     position: relative;
     min-height: 100%;
-    padding: 26px;
+    padding: 22px;
 }
 
 .empty-state {
@@ -523,15 +550,19 @@ kbd {
     width: min(840px, 100%);
     margin: 0 auto;
     padding: clamp(28px, 5vw, 52px);
-    border-radius: 22px;
-    background: #fffdfa;
-    box-shadow: 0 12px 34px rgba(39, 29, 20, 0.08);
+    border-radius: 0;
+    background: #fffefc;
+    box-shadow: 0 14px 42px rgba(17, 17, 17, 0.06);
+    font-family: var(--font-copy);
     line-height: 1.72;
 }
 
 .markdown-document :is(h1, h2, h3, h4),
 .rich-document :is(h1, h2, h3, h4),
 .txt-document :is(h1, h2, h3, h4) {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.04em;
     line-height: 1.1;
 }
 
@@ -544,8 +575,8 @@ kbd {
 .rich-document pre {
     padding: 16px;
     overflow: auto;
-    border-radius: 14px;
-    background: #f6f1e8;
+    border-radius: 0;
+    background: #f3f1ed;
     font-family: var(--font-mono);
 }
 
@@ -558,9 +589,9 @@ pre {
 
 .markdown-document code,
 .rich-document code {
-    background: #f3ece1;
+    background: #efede9;
     padding: 0.12em 0.35em;
-    border-radius: 6px;
+    border-radius: 0;
 }
 
 .txt-document {
@@ -590,12 +621,12 @@ pre {
 
 .reader-run:hover,
 .pdf-run:hover {
-    background: rgba(11, 107, 111, 0.12);
+    background: rgba(17, 17, 17, 0.08);
 }
 
 .reader-run:active,
 .pdf-run:active {
-    background: rgba(11, 107, 111, 0.16);
+    background: rgba(17, 17, 17, 0.12);
 }
 
 .highlight-layer {

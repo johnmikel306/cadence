@@ -1,6 +1,6 @@
-# 12reader
+# Cadence
 
-12reader is now a monorepo for two related reading products:
+Cadence is now a monorepo for two related reading products:
 
 - a Flask web app for uploaded documents
 - a Chrome extension for live webpage read-aloud
@@ -32,7 +32,7 @@ The Chrome extension for webpage reading.
 ## Monorepo layout
 
 ```text
-12reader/
+cadence/
 |- app.py
 |- requirements.txt
 |- package.json

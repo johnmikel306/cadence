@@ -1,20 +1,35 @@
 (function () {
-    const elements = {
-        voiceSelect: document.getElementById("voice-select"),
-        rateSelect: document.getElementById("rate-select"),
-        clickModeToggle: document.getElementById("click-mode-toggle"),
-        readTopBtn: document.getElementById("read-top-btn"),
-        pauseBtn: document.getElementById("pause-btn"),
-        resumeBtn: document.getElementById("resume-btn"),
-        stopBtn: document.getElementById("stop-btn"),
-        statusText: document.getElementById("status-text"),
-        pageMeta: document.getElementById("page-meta")
+    const RATE_STEPS = ["-25%", "+0%", "+25%", "+50%"];
+    const RATE_LABELS = {
+        "-25%": "0.75x",
+        "+0%": "1.0x",
+        "+25%": "1.25x",
+        "+50%": "1.5x"
     };
 
+    const elements = {
+        artifactCoverImage: document.getElementById("artifact-cover-image"),
+        artifactCoverFallback: document.getElementById("artifact-cover-fallback"),
+        artifactKicker: document.getElementById("artifact-kicker"),
+        artifactTitle: document.getElementById("artifact-title"),
+        artifactMeta: document.getElementById("artifact-meta"),
+        primaryActionBtn: document.getElementById("primary-action-btn"),
+        pauseBtn: document.getElementById("pause-btn"),
+        stopBtn: document.getElementById("stop-btn"),
+        voiceSelect: document.getElementById("voice-select"),
+        rateRange: document.getElementById("rate-range"),
+        rateReadout: document.getElementById("rate-readout"),
+        clickModeToggle: document.getElementById("click-mode-toggle"),
+        statusText: document.getElementById("status-text")
+    };
+
+    let activeTab = null;
     let activeTabId = null;
+    let currentState = null;
+    let primaryActionType = "START_READING_TOP";
 
     init().catch((error) => {
-        setStatus(error.message || "Extension popup failed to load.", true);
+        setStatus(error.message || "Cadence popup failed to load.", true);
     });
 
     chrome.runtime.onMessage.addListener((message) => {
@@ -31,18 +46,22 @@
             throw new Error("No active tab is available.");
         }
 
+        activeTab = tab;
         activeTabId = tab.id;
-        elements.pageMeta.textContent = tab.title || tab.url || "Current tab";
-
+        renderTabMeta(tab);
         bindEvents();
         await loadVoices();
         await refreshState();
     }
 
     function bindEvents() {
-        elements.readTopBtn.addEventListener("click", () => sendAction("START_READING_TOP", "Starting webpage reading..."));
+        elements.primaryActionBtn.addEventListener("click", async () => {
+            await sendAction(primaryActionType, primaryActionType === "START_READING_TOP"
+                ? "Starting webpage reading..."
+                : "Resuming playback...");
+        });
+
         elements.pauseBtn.addEventListener("click", () => sendAction("PAUSE_READING", "Paused."));
-        elements.resumeBtn.addEventListener("click", () => sendAction("RESUME_READING", "Resumed."));
         elements.stopBtn.addEventListener("click", () => sendAction("STOP_READING", "Stopped."));
 
         elements.voiceSelect.addEventListener("change", async () => {
@@ -50,8 +69,14 @@
             setStatus("Voice updated.");
         });
 
-        elements.rateSelect.addEventListener("change", async () => {
-            await updateSettings({ rate: elements.rateSelect.value });
+        elements.rateRange.addEventListener("input", () => {
+            const rate = RATE_STEPS[Number(elements.rateRange.value)] || "+0%";
+            elements.rateReadout.textContent = RATE_LABELS[rate];
+        });
+
+        elements.rateRange.addEventListener("change", async () => {
+            const rate = RATE_STEPS[Number(elements.rateRange.value)] || "+0%";
+            await updateSettings({ rate });
             setStatus("Speed updated.");
         });
 
@@ -115,40 +140,101 @@
         renderState(response.state);
     }
 
+    function renderTabMeta(tab) {
+        const title = tab?.title || "Current webpage";
+        const hostname = tab?.url ? safeHostname(tab.url) : "Current webpage";
+
+        elements.artifactTitle.textContent = title;
+        elements.artifactMeta.textContent = `${hostname} · Local Edge TTS playback`;
+
+        if (tab?.favIconUrl) {
+            elements.artifactCoverImage.src = tab.favIconUrl;
+            elements.artifactCoverImage.hidden = false;
+            elements.artifactCoverFallback.hidden = true;
+        } else {
+            elements.artifactCoverImage.hidden = true;
+            elements.artifactCoverFallback.hidden = false;
+        }
+    }
+
     function renderState(state) {
         if (!state) {
             return;
         }
 
+        currentState = state;
+        renderTabMeta(activeTab);
+
         elements.voiceSelect.value = state.voiceName || "en-US-AriaNeural";
-        elements.rateSelect.value = state.rate || "+0%";
+        setRateUI(state.rate || "+0%");
         elements.clickModeToggle.checked = Boolean(state.clickMode);
 
         if (state.lastError) {
+            elements.artifactKicker.textContent = "Playback issue";
+            setPrimaryAction("START_READING_TOP", "Initiate playback", false);
+            elements.pauseBtn.disabled = true;
+            elements.stopBtn.disabled = !state.hasDocumentText;
             setStatus(state.lastError, true);
             return;
         }
 
         if (state.isSpeaking) {
+            elements.artifactKicker.textContent = "Currently reading";
+            setPrimaryAction("START_READING_TOP", "Playback active", true);
+            elements.pauseBtn.disabled = false;
+            elements.stopBtn.disabled = false;
             setStatus("Reading this page now with Edge TTS.");
             return;
         }
 
         if (state.isPaused) {
+            elements.artifactKicker.textContent = "Playback paused";
+            setPrimaryAction("RESUME_READING", "Resume playback", false);
+            elements.pauseBtn.disabled = true;
+            elements.stopBtn.disabled = false;
             setStatus("Paused at the current reading position.");
             return;
         }
 
         if (state.hasDocumentText && state.currentOffset > 0) {
+            elements.artifactKicker.textContent = "Ready to continue";
+            setPrimaryAction("RESUME_READING", "Resume playback", false);
+            elements.pauseBtn.disabled = true;
+            elements.stopBtn.disabled = false;
             setStatus("Ready to resume from the last reading position.");
             return;
         }
 
+        elements.artifactKicker.textContent = "Current page";
+        setPrimaryAction("START_READING_TOP", "Initiate playback", false);
+        elements.pauseBtn.disabled = true;
+        elements.stopBtn.disabled = true;
         setStatus("Open a webpage and start reading.");
+    }
+
+    function setPrimaryAction(actionType, label, disabled) {
+        primaryActionType = actionType;
+        elements.primaryActionBtn.textContent = label;
+        elements.primaryActionBtn.disabled = Boolean(disabled);
+    }
+
+    function setRateUI(rate) {
+        const stepIndex = Math.max(0, RATE_STEPS.indexOf(rate));
+        const safeRate = RATE_STEPS[stepIndex] || "+0%";
+        elements.rateRange.value = String(stepIndex);
+        elements.rateReadout.textContent = RATE_LABELS[safeRate];
+    }
+
+    function safeHostname(url) {
+        try {
+            return new URL(url).hostname.replace(/^www\./, "");
+        } catch (error) {
+            return "Current webpage";
+        }
     }
 
     function setStatus(message, isError) {
         elements.statusText.textContent = message;
-        elements.statusText.style.color = isError ? "#b42318" : "";
+        elements.statusText.style.color = isError ? "#8d1f11" : "";
     }
 })();
