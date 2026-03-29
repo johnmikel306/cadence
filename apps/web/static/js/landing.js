@@ -101,7 +101,11 @@
     selectors.heroMetrics.forEach((metric, index) => {
       const direction = index % 2 === 0 ? 1 : -1;
       const offset = progress * (8 + index * 2) * direction;
-      metric.style.transform = `translate3d(0, ${offset}px, 0)`;
+      if (offset === 0) {
+        metric.style.removeProperty('transform');
+      } else {
+        metric.style.transform = `translate3d(0, ${offset}px, 0)`;
+      }
     });
   }
 

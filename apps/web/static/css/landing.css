@@ -326,7 +326,7 @@ body.landing-page::before {
 }
 
 .hero-visual {
-  min-height: 760px;
+  min-height: min(760px, calc(100svh - var(--hero-offset) - 68px));
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
